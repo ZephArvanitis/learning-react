@@ -2,11 +2,13 @@
 
 ## HelloWorld
 HelloWorld is an example react native application based on the managed/expo
-workflow. Currently it does two things:
+workflow. Currently it does a small subset of what we'd want a "real" app
+to do:
 
-* has some buttons you can tap to increment a counter
-* GETs some todo items from an api (thank you jsonplaceholder!) and sticks
-    them in a list with some formatting.
+* Has a basic navigation structure
+* Allows you to take photos and displays them in "Submit report"
+* Aaaaand, that's it so far! Stay tuned.
+
 
 ## jwt_client
 The JWT client follows the tutorial
