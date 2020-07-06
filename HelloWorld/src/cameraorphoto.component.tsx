@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Camera } from 'expo-camera'
-import { Dimensions, TouchableOpacity, Text, View } from 'react-native';
+import { Button, Dimensions, Image, TouchableOpacity, Text, View } from 'react-native';
 
-import Toolbar from './src/toolbar.component'
-import Gallery from './src/gallery.component'
+import Toolbar from './toolbar.component'
+import styles from './styles'
 
 export default class CameraOrPhotoView extends React.Component {
   camera = null;
@@ -28,10 +28,15 @@ export default class CameraOrPhotoView extends React.Component {
           }
       });
   }
+  retakePhoto = () => {
+      this.setState(() => {
+          return {cameraMode: true}
+      });
+  }
   handleCapture = async () => {
       console.log("Trying to capture a photo");
       const photoData =  await this.camera.takePictureAsync();
-      this.setState({ captures: [photoData, ...this.state.captures] });
+      this.setState({ captures: [photoData, ...this.state.captures], cameraMode: false });
       console.log("Total captures " + this.state.captures.length);
   };
 
@@ -42,41 +47,57 @@ export default class CameraOrPhotoView extends React.Component {
   };
 
   render() {
-      const { hasCameraPermission, flashMode, cameraType, captures } = this.state;
+      const { hasCameraPermission, flashMode, cameraType, captures, cameraMode } = this.state;
 
-      if (this.)
-      if (hasCameraPermission === null) {
-          return <View />;
-      } else if (hasCameraPermission === false) {
-          return <Text>Access to camera denied.</Text>;
-      }
+      // Camera mode
+      if (cameraMode || captures.length == 0) {
+          if (hasCameraPermission === null) {
+              return <View />;
+          } else if (hasCameraPermission === false) {
+              return <Text>Access to camera denied.</Text>;
+          }
 
-      return (
-          <View style={{ flex: 1 }}>
-          <Camera
-              style={{ width: Dimensions.get('window').width,
-                  aspectRatio: 1}}
-              type={this.state.cameraType}
-              flashMode={this.state.flashMode}
-              ref={camera => this.camera = camera}
-          >
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-                flexDirection: 'row',
-              }}>
+          return (
+              <View style={{ flex: 1 }}>
+              <Camera
+                  style={{ width: Dimensions.get('window').width,
+                      aspectRatio: 1}}
+                  type={this.state.cameraType}
+                  flashMode={this.state.flashMode}
+                  ref={camera => this.camera = camera}
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: 'transparent',
+                    flexDirection: 'row',
+                  }}>
+                </View>
+              </Camera>
+              <Toolbar
+                  flashMode={this.flashMode}
+                  cameraType={this.cameraType}
+                  setFlashMode={this.setFlashMode}
+                  onCapture={this.handleCapture}
+                  flipCamera={this.flipCamera}
+              />
             </View>
-          </Camera>
-          <Toolbar
-              flashMode={this.flashMode}
-              cameraType={this.cameraType}
-              setFlashMode={this.setFlashMode}
-              onCapture={this.handleCapture}
-              flipCamera={this.flipCamera}
-          />
-              {captures.length > 0 && <Gallery captures={captures}/>}
-        </View>
+          );
+      }
+      // Picture mode
+      var uri = captures[0].uri;
+      return (
+          <View key={uri} style={{ flex: 1 }}>
+                <Button title={"retake photo"} onPress={this.retakePhoto} />
+                <Image
+                    style={{ width: Dimensions.get('window').width,
+                        aspectRatio: 1}}
+                    source={{ uri  }} />
+            </View>
+          // <View style={{ flex: 1 }}>
+          // <Image
+          //     source={{ latest_photo }} />
+          // </View>
       );
   };
 };

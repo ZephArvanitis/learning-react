@@ -10,6 +10,7 @@ import { createStackNavigator, navigation } from '@react-navigation/stack'
 import * as Permissions from 'expo-permissions'
 import Toolbar from './src/toolbar.component'
 import CameraView from './camera.tsx'
+import CameraOrPhotoView from './src/cameraorphoto.component.tsx'
 // import CameraView from './src/camera.page'
 
 
@@ -152,7 +153,7 @@ function SubmitReport({ navigation }) {
             <Text style={styles.biggertext}>1) Take a picture of the issue</Text>
             <Text style={styles.biggertext}>2) Tag it with location</Text>
             <Text style={styles.biggertext}>3) Submit!</Text>
-            <CameraView />
+            <CameraOrPhotoView />
             <Button onPress={() => navigation.goBack()}
                 title="Back to Home"/>
             </ScrollView>
